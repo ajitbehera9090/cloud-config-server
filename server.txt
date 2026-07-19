@@ -1,0 +1,273 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive   # ✅ ensures reactive mode
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+
+            - id: customer-service
+              uri: lb://CUSTOMER-SERVICE
+              predicates:
+                - Path=/customers/**
+
+            - id: policy-service
+              uri: lb://POLICY-SERVICE
+              predicates:
+                - Path=/policies/**
+
+            - id: claims-service
+              uri: lb://CLAIMS-SERVICE
+              predicates:
+                - Path=/claims/**
+            - id: payment-service
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/payments/**
+            - id: document-service
+              uri: lb://DOCUMENT-SERVICE
+              predicates:
+                - Path=/documents/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: API Gateway
+    version: 1.0.0
+
+
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Claims Service
+    version: 1.0.0
+
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: CUSTOMER-SERVICE
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true        # ✅ FIX (important)
+    ip-address: 127.0.0.1         # ✅ FIX (important)
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+
+server:
+  port: 8086
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+
+document:
+
+  upload-path: D:/InsuranceDocuments
+
+  allowed-types:
+    - application/pdf
+    - image/jpeg
+    - image/png
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: INFO
+    com.insurance.documentservice: DEBUG
+
+
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+ mail:
+    host: smtp.gmail.com
+    port: 587
+    username: your-email@gmail.com
+    password: your-app-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.insurance.paymentservice: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+
+
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Policy Service
+    version: 1.0.0
